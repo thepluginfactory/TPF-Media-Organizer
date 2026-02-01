@@ -1,0 +1,76 @@
+/**
+ * TPF Media Organizer - Media Modal Styles
+ */
+
+/* Folder filter in media modal */
+.tpf-mo-modal-filter {
+    margin-left: 10px;
+}
+
+.tpf-mo-modal-filter select {
+    min-width: 150px;
+    max-width: 200px;
+}
+
+/* Folder indicator in attachment details */
+.tpf-mo-attachment-folders {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #dcdcde;
+}
+
+.tpf-mo-attachment-folders-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #1d2327;
+}
+
+.tpf-mo-attachment-folder-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tpf-mo-folder-tag {
+    background: #f0f0f1;
+    color: #50575e;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tpf-mo-folder-tag .dashicons {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+}
+
+.tpf-mo-no-folder {
+    color: #a7aaad;
+    font-style: italic;
+    font-size: 12px;
+}
+
+/* Toolbar integration */
+.media-toolbar-secondary .tpf-mo-modal-filter {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Attachment browser sidebar folder assignment */
+.tpf-mo-sidebar-folder-select {
+    margin-top: 15px;
+}
+
+.tpf-mo-sidebar-folder-select label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.tpf-mo-sidebar-folder-select select {
+    width: 100%;
+}

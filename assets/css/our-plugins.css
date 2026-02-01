@@ -1,0 +1,184 @@
+/**
+ * TPF Media Organizer - Our Plugins Page Styles
+ */
+
+.tpf-plugins-page {
+    max-width: 1200px;
+}
+
+.tpf-plugins-intro {
+    font-size: 14px;
+    color: #646970;
+    margin-bottom: 30px;
+}
+
+/* Plugin Grid */
+.tpf-plugins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+/* Plugin Card */
+.tpf-plugin-card {
+    background: #fff;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    display: flex;
+    overflow: hidden;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.tpf-plugin-card:hover {
+    border-color: #2271b1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Plugin Icon */
+.tpf-plugin-icon {
+    width: 80px;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+
+.tpf-plugin-icon .dashicons {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+}
+
+/* Plugin Info */
+.tpf-plugin-info {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tpf-plugin-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #1d2327;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tpf-pro-badge {
+    background: #dba617;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.tpf-plugin-description {
+    font-size: 13px;
+    color: #646970;
+    margin: 0 0 12px;
+    line-height: 1.5;
+    flex: 1;
+}
+
+/* Plugin Status */
+.tpf-plugin-status {
+    margin-bottom: 12px;
+}
+
+.tpf-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 3px;
+}
+
+.tpf-status .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+.tpf-status-active {
+    background: #edfaef;
+    color: #00a32a;
+}
+
+.tpf-status-installed {
+    background: #f0f6fc;
+    color: #2271b1;
+}
+
+/* Plugin Actions */
+.tpf-plugin-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.tpf-plugin-actions .button {
+    flex: 1;
+    text-align: center;
+}
+
+/* Footer */
+.tpf-plugins-footer {
+    background: #f6f7f7;
+    border: 1px solid #dcdcde;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+}
+
+.tpf-plugins-footer p {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #646970;
+}
+
+.tpf-plugins-footer .dashicons {
+    color: #2271b1;
+}
+
+.tpf-plugins-footer a {
+    color: #2271b1;
+    text-decoration: none;
+}
+
+.tpf-plugins-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .tpf-plugins-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tpf-plugin-card {
+        flex-direction: column;
+    }
+
+    .tpf-plugin-icon {
+        width: 100%;
+        min-width: auto;
+        height: 60px;
+    }
+
+    .tpf-plugin-icon .dashicons {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+    }
+}

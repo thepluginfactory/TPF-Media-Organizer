@@ -1,0 +1,20 @@
+{
+    "name": "thepluginfactory/tpf-media-organizer",
+    "description": "Organize your WordPress media library into folders for easier management",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "The Plugin Factory",
+            "homepage": "https://thepluginfactory.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "TPFMediaOrganizer\\": "includes/"
+        }
+    }
+}
