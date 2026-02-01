@@ -4,7 +4,7 @@ Tags: media library, folders, media folders, organize media, media management
 Requires at least: 5.8
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.0.13
+Stable tag: 1.0.14
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ TPF Media Organizer should work alongside most other plugins. If you experience 
 6. Bulk actions dropdown with folder options
 
 == Changelog ==
+
+= 1.0.14 =
+* Revert query_var change (broke folder filtering entirely)
+* Revert to navigating to All Media after drag-drop
 
 = 1.0.13 =
 * Enable query_var on taxonomy (may fix initial load filtering)
