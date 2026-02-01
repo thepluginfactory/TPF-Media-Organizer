@@ -338,11 +338,38 @@ class Taxonomy {
                 'name'     => $folder->name,
                 'slug'     => $folder->slug,
                 'parent'   => $folder->parent,
-                'count'    => $folder->count,
+                'count'    => self::count_folder_attachments($folder->term_id),
                 'children' => self::get_folder_tree($folder->term_id),
             );
         }
 
         return $tree;
+    }
+
+    /**
+     * Count attachments in a folder (handles 'inherit' post status)
+     *
+     * @param int $folder_id Folder term ID
+     * @return int
+     */
+    public static function count_folder_attachments($folder_id) {
+        global $wpdb;
+
+        $count = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(DISTINCT p.ID)
+                FROM {$wpdb->posts} p
+                INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
+                INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
+                WHERE tt.taxonomy = %s
+                AND tt.term_id = %d
+                AND p.post_type = 'attachment'
+                AND p.post_status = 'inherit'",
+                self::TAXONOMY,
+                $folder_id
+            )
+        );
+
+        return (int) $count;
     }
 }
