@@ -568,8 +568,11 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        // Refresh the page to update counts and view
-                        window.location.reload();
+                        // Navigate to the target folder to show the moved items
+                        var targetFolder = folderId === 0 ? 'uncategorized' : folderId;
+                        var url = new URL(window.location.href);
+                        url.searchParams.set('tpf_media_folder', targetFolder);
+                        window.location.href = url.toString();
                     } else {
                         self.showToast(response.data.message, 'error');
                     }
