@@ -537,9 +537,10 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        // Update the folder name in the sidebar - no reload needed
-                        var $item = $('.tpf-mo-folder-item[data-folder-id="' + folderId + '"]');
-                        $item.find('> .tpf-mo-folder-link .tpf-mo-folder-name').text(response.data.folder.name);
+                        // Navigate to All Media
+                        var url = new URL(window.location.href);
+                        url.searchParams.delete('tpf_media_folder');
+                        window.location.href = url.toString();
                     } else {
                         self.showToast(response.data.message, 'error');
                         self.cancelRename();
@@ -608,10 +609,10 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        // Refresh current folder view (moved images will disappear)
-                        self.refreshMediaLibrary();
-                        // Update folder counts in sidebar
-                        self.refreshFolderCounts();
+                        // Navigate to All Media
+                        var url = new URL(window.location.href);
+                        url.searchParams.delete('tpf_media_folder');
+                        window.location.href = url.toString();
                     } else {
                         self.showToast(response.data.message, 'error');
                     }
