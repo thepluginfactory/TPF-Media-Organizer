@@ -372,6 +372,42 @@
         },
 
         /**
+         * Refresh folder counts in the sidebar
+         */
+        refreshFolderCounts: function() {
+            var self = this;
+
+            $.ajax({
+                url: tpfMediaOrganizer.ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'tpf_mo_get_folder_data',
+                    nonce: tpfMediaOrganizer.nonce
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Recursive function to update counts
+                        var updateCount = function(folder) {
+                            var $item = $('.tpf-mo-folder-item[data-folder-id="' + folder.id + '"]');
+                            $item.find('> .tpf-mo-folder-link .tpf-mo-folder-count').text(folder.count);
+                            // Handle nested children
+                            if (folder.children && folder.children.length > 0) {
+                                folder.children.forEach(updateCount);
+                            }
+                        };
+
+                        // Update all folder counts
+                        response.data.folders.forEach(updateCount);
+
+                        // Update uncategorized count
+                        var $uncat = $('.tpf-mo-folder-item[data-folder-id="uncategorized"]');
+                        $uncat.find('> .tpf-mo-folder-link .tpf-mo-folder-count').text(response.data.uncategorizedCount);
+                    }
+                }
+            });
+        },
+
+        /**
          * Filter media by folder
          */
         filterByFolder: function(folderId) {
@@ -501,7 +537,9 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        window.location.reload();
+                        // Update the folder name in the sidebar - no reload needed
+                        var $item = $('.tpf-mo-folder-item[data-folder-id="' + folderId + '"]');
+                        $item.find('> .tpf-mo-folder-link .tpf-mo-folder-name').text(response.data.folder.name);
                     } else {
                         self.showToast(response.data.message, 'error');
                         self.cancelRename();
@@ -570,10 +608,10 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        // Navigate to All Media (initial load filtering unreliable)
-                        var url = new URL(window.location.href);
-                        url.searchParams.delete('tpf_media_folder');
-                        window.location.href = url.toString();
+                        // Refresh current folder view (moved images will disappear)
+                        self.refreshMediaLibrary();
+                        // Update folder counts in sidebar
+                        self.refreshFolderCounts();
                     } else {
                         self.showToast(response.data.message, 'error');
                     }
