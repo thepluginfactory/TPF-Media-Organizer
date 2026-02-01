@@ -3,7 +3,7 @@
  * Plugin Name: TPF Media Organizer
  * Plugin URI: https://thepluginfactory.com/plugins/tpf-media-organizer
  * Description: Organize your WordPress media library into folders for easier management. Create virtual folders, drag-and-drop organization, and filter media by folder.
- * Version: 1.0.3
+ * Version: 1.0.4
  * Author: The Plugin Factory
  * Author URI: https://thepluginfactory.com
  * License: GPL v2 or later
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Plugin constants
-define('TPF_MEDIA_ORGANIZER_VERSION', '1.0.3');
+define('TPF_MEDIA_ORGANIZER_VERSION', '1.0.4');
 define('TPF_MEDIA_ORGANIZER_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('TPF_MEDIA_ORGANIZER_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('TPF_MEDIA_ORGANIZER_PLUGIN_BASENAME', plugin_basename(__FILE__));

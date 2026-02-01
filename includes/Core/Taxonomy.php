@@ -274,14 +274,33 @@ class Taxonomy {
      * @return bool
      */
     public static function assign_to_folder($attachment_id, $folder_id) {
+        // Get current folder assignments before changing
+        $old_terms = wp_get_object_terms($attachment_id, self::TAXONOMY, array('fields' => 'ids'));
+
         if ($folder_id === 0) {
             // Remove from all folders
             wp_set_object_terms($attachment_id, array(), self::TAXONOMY);
-            return true;
+        } else {
+            $result = wp_set_object_terms($attachment_id, array($folder_id), self::TAXONOMY);
+            if (is_wp_error($result)) {
+                return false;
+            }
         }
 
-        $result = wp_set_object_terms($attachment_id, array($folder_id), self::TAXONOMY);
-        return !is_wp_error($result);
+        // Force recount for old folders (to decrease their counts)
+        if (!empty($old_terms) && !is_wp_error($old_terms)) {
+            wp_update_term_count_now($old_terms, self::TAXONOMY);
+        }
+
+        // Force recount for new folder (to increase its count)
+        if ($folder_id > 0) {
+            wp_update_term_count_now(array($folder_id), self::TAXONOMY);
+        }
+
+        // Clear any cached term counts
+        clean_term_cache($folder_id, self::TAXONOMY);
+
+        return true;
     }
 
     /**

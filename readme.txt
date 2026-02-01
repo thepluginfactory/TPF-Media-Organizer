@@ -4,7 +4,7 @@ Tags: media library, folders, media folders, organize media, media management
 Requires at least: 5.8
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ TPF Media Organizer should work alongside most other plugins. If you experience 
 6. Bulk actions dropdown with folder options
 
 == Changelog ==
+
+= 1.0.4 =
+* Fixed folder counts not updating when items are assigned to folders
+* Force WordPress to recount terms after assignment
 
 = 1.0.3 =
 * Fixed folder filtering in grid view - items now properly filter when clicking folders
