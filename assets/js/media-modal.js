@@ -18,6 +18,18 @@
     var settings = tpfMediaOrganizerModal.settings || {};
     var strings = tpfMediaOrganizerModal.strings || {};
 
+    // Track current folder selection for AJAX filtering
+    var currentModalFolder = '';
+
+    // Use ajaxPrefilter to inject folder into AJAX requests
+    $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+        if (options.data && typeof options.data === 'string' && options.data.indexOf('action=query-attachments') !== -1) {
+            if (currentModalFolder) {
+                options.data += '&tpf_media_folder=' + encodeURIComponent(currentModalFolder);
+            }
+        }
+    });
+
     /**
      * Extend AttachmentsBrowser to add folder filter
      */
@@ -146,6 +158,8 @@
             var filter = this.filters[key];
 
             if (filter) {
+                // Update the tracked folder for AJAX filtering
+                currentModalFolder = filter.props.tpf_media_folder || '';
                 this.model.set(filter.props);
             }
         }
