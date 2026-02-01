@@ -570,10 +570,8 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        // Navigate to All Media view (filtering on initial load is unreliable)
-                        var url = new URL(window.location.href);
-                        url.searchParams.delete('tpf_media_folder');
-                        window.location.href = url.toString();
+                        // Stay in current folder - just reload to update counts
+                        window.location.reload();
                     } else {
                         self.showToast(response.data.message, 'error');
                     }

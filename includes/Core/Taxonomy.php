@@ -82,7 +82,7 @@ class Taxonomy {
             'show_in_nav_menus' => false,
             'show_tagcloud'     => false,
             'show_in_rest'      => true,
-            'query_var'         => false,
+            'query_var'         => true,
             'rewrite'           => false,
             'capabilities'      => array(
                 'manage_terms' => 'upload_files',
