@@ -568,10 +568,9 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        // Navigate to the target folder to show the moved items
-                        var targetFolder = folderId === 0 ? 'uncategorized' : folderId;
+                        // Navigate to All Media view (filtering on initial load is unreliable)
                         var url = new URL(window.location.href);
-                        url.searchParams.set('tpf_media_folder', targetFolder);
+                        url.searchParams.delete('tpf_media_folder');
                         window.location.href = url.toString();
                     } else {
                         self.showToast(response.data.message, 'error');
