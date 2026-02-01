@@ -27,10 +27,17 @@
             var urlParams = new URLSearchParams(window.location.search);
             this.currentFolder = urlParams.get('tpf_media_folder') || 'all';
 
+            // Hook AJAX FIRST before anything else loads
+            this.hookMediaLibraryAjax();
+
             this.createSidebar();
             this.bindEvents();
             this.initDragDrop();
-            this.hookMediaLibraryAjax();
+
+            // Force refresh if we have a folder filter to ensure correct initial view
+            if (this.currentFolder && this.currentFolder !== 'all') {
+                this.refreshMediaLibrary();
+            }
         },
 
         /**
@@ -350,6 +357,25 @@
                     });
                 }
             });
+        },
+
+        /**
+         * Refresh the media library grid with current folder filter
+         */
+        refreshMediaLibrary: function() {
+            var self = this;
+
+            // Wait a short moment for WordPress media library to initialize
+            setTimeout(function() {
+                if (typeof wp !== 'undefined' && wp.media && wp.media.frame) {
+                    var library = wp.media.frame.state().get('library');
+                    if (library) {
+                        library.props.set({tpf_media_folder: self.currentFolder === 'all' ? '' : self.currentFolder});
+                        library.reset();
+                        library.more();
+                    }
+                }
+            }, 100);
         },
 
         /**
