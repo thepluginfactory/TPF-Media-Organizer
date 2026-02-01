@@ -115,12 +115,18 @@ class MediaModal {
      * @return array
      */
     public function filter_attachments_query($query) {
-        // Check if folder filter is set
-        if (empty($_REQUEST['tpf_media_folder'])) {
-            return $query;
+        // Check if folder filter is set (from AJAX request or from query args)
+        $folder = '';
+
+        if (!empty($_REQUEST['tpf_media_folder'])) {
+            $folder = sanitize_text_field($_REQUEST['tpf_media_folder']);
+        } elseif (!empty($query['tpf_media_folder'])) {
+            $folder = sanitize_text_field($query['tpf_media_folder']);
         }
 
-        $folder = sanitize_text_field($_REQUEST['tpf_media_folder']);
+        if (empty($folder)) {
+            return $query;
+        }
 
         if ($folder === 'uncategorized') {
             $query['tax_query'] = array(

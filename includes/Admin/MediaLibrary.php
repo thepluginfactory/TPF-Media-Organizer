@@ -57,6 +57,9 @@ class MediaLibrary {
 
         // AJAX handler for getting folder data
         add_action('wp_ajax_tpf_mo_get_folder_data', array($this, 'ajax_get_folder_data'));
+
+        // Inject folder filter into media library settings
+        add_filter('media_view_settings', array($this, 'inject_folder_filter_settings'), 10, 2);
     }
 
     /**
@@ -272,5 +275,34 @@ class MediaLibrary {
             'folders'            => Taxonomy::get_folder_tree(),
             'uncategorizedCount' => Taxonomy::get_folder_count(0),
         ));
+    }
+
+    /**
+     * Inject folder filter into media view settings
+     * This makes the filter work on initial page load
+     *
+     * @param array    $settings Media view settings
+     * @param \WP_Post $post     Post object
+     * @return array
+     */
+    public function inject_folder_filter_settings($settings, $post) {
+        global $pagenow;
+
+        // Only on media library page
+        if ($pagenow !== 'upload.php') {
+            return $settings;
+        }
+
+        $folder = isset($_GET['tpf_media_folder']) ? sanitize_text_field($_GET['tpf_media_folder']) : '';
+
+        if (!empty($folder)) {
+            // Add our folder filter to the default library query
+            if (!isset($settings['library'])) {
+                $settings['library'] = array();
+            }
+            $settings['library']['tpf_media_folder'] = $folder;
+        }
+
+        return $settings;
     }
 }

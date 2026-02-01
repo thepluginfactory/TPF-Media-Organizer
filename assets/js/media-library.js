@@ -27,17 +27,10 @@
             var urlParams = new URLSearchParams(window.location.search);
             this.currentFolder = urlParams.get('tpf_media_folder') || 'all';
 
-            // Hook AJAX FIRST before anything else loads
             this.hookMediaLibraryAjax();
-
             this.createSidebar();
             this.bindEvents();
             this.initDragDrop();
-
-            // Force refresh if we have a folder filter to ensure correct initial view
-            if (this.currentFolder && this.currentFolder !== 'all') {
-                this.refreshMediaLibrary();
-            }
         },
 
         /**

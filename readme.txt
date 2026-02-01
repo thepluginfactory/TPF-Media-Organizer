@@ -4,7 +4,7 @@ Tags: media library, folders, media folders, organize media, media management
 Requires at least: 5.8
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ TPF Media Organizer should work alongside most other plugins. If you experience 
 6. Bulk actions dropdown with folder options
 
 == Changelog ==
+
+= 1.0.7 =
+* Fixed unreliable folder filtering - use server-side media_view_settings filter
+* Inject folder filter directly into WordPress media library initialization
 
 = 1.0.6 =
 * Fixed unreliable folder filtering on page load
