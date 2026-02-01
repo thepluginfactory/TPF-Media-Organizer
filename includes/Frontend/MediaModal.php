@@ -42,18 +42,16 @@ class MediaModal {
      * Constructor
      */
     private function __construct() {
-        if (!DefaultSettings::get_setting('tpf_mo_enable_modal_filter')) {
-            return;
-        }
-
-        // Add folder filter to media modal
-        add_action('wp_enqueue_media', array($this, 'enqueue_modal_scripts'));
-
-        // Extend media query for AJAX requests
+        // Always filter AJAX queries (needed for both modal and main library grid)
         add_filter('ajax_query_attachments_args', array($this, 'filter_attachments_query'));
 
         // Add folder data to attachment JSON
         add_filter('wp_prepare_attachment_for_js', array($this, 'add_folder_to_attachment'), 10, 3);
+
+        // Only add modal UI if setting is enabled
+        if (DefaultSettings::get_setting('tpf_mo_enable_modal_filter')) {
+            add_action('wp_enqueue_media', array($this, 'enqueue_modal_scripts'));
+        }
     }
 
     /**

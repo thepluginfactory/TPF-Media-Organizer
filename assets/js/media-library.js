@@ -23,9 +23,31 @@
             this.settings = tpfMediaOrganizer.settings || {};
             this.strings = tpfMediaOrganizer.strings || {};
 
+            // Get current folder from URL
+            var urlParams = new URLSearchParams(window.location.search);
+            this.currentFolder = urlParams.get('tpf_media_folder') || 'all';
+
             this.createSidebar();
             this.bindEvents();
             this.initDragDrop();
+            this.hookMediaLibraryAjax();
+        },
+
+        /**
+         * Hook into WordPress media library AJAX to filter by folder
+         */
+        hookMediaLibraryAjax: function() {
+            var self = this;
+
+            // Hook into the AJAX request for query-attachments
+            $(document).ajaxSend(function(event, jqXHR, settings) {
+                if (settings.data && typeof settings.data === 'string' && settings.data.indexOf('action=query-attachments') !== -1) {
+                    // Add our folder filter to the request
+                    if (self.currentFolder && self.currentFolder !== 'all') {
+                        settings.data += '&tpf_media_folder=' + encodeURIComponent(self.currentFolder);
+                    }
+                }
+            });
         },
 
         /**
@@ -158,16 +180,12 @@
          * Set active folder from URL
          */
         setActiveFromUrl: function() {
-            var urlParams = new URLSearchParams(window.location.search);
-            var folderId = urlParams.get('tpf_media_folder');
+            $('.tpf-mo-folder-link').removeClass('active');
 
-            if (folderId) {
-                $('.tpf-mo-folder-link').removeClass('active');
-                $('.tpf-mo-folder-item[data-folder-id="' + folderId + '"] > .tpf-mo-folder-link').addClass('active');
-                this.currentFolder = folderId;
+            if (this.currentFolder && this.currentFolder !== 'all') {
+                $('.tpf-mo-folder-item[data-folder-id="' + this.currentFolder + '"] > .tpf-mo-folder-link').addClass('active');
             } else {
                 $('.tpf-mo-folder-item[data-folder-id="all"] > .tpf-mo-folder-link').addClass('active');
-                this.currentFolder = 'all';
             }
         },
 
@@ -338,15 +356,36 @@
          * Filter media by folder
          */
         filterByFolder: function(folderId) {
-            var url = new URL(window.location.href);
+            var self = this;
 
+            // Update current folder
+            this.currentFolder = folderId;
+
+            // Update URL without full page reload
+            var url = new URL(window.location.href);
             if (folderId === 'all') {
                 url.searchParams.delete('tpf_media_folder');
             } else {
                 url.searchParams.set('tpf_media_folder', folderId);
             }
+            window.history.pushState({}, '', url.toString());
 
-            window.location.href = url.toString();
+            // Update active state in sidebar
+            this.setActiveFromUrl();
+
+            // Refresh the media library grid
+            if (typeof wp !== 'undefined' && wp.media && wp.media.frame) {
+                // Clear selection and re-fetch
+                var library = wp.media.frame.state().get('library');
+                if (library) {
+                    library.props.set({tpf_media_folder: folderId === 'all' ? '' : folderId});
+                    library.reset();
+                    library.more();
+                }
+            } else {
+                // Fallback: reload page
+                window.location.href = url.toString();
+            }
         },
 
         /**
@@ -367,9 +406,8 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        self.refreshFolders();
-                        $('.tpf-mo-new-folder-form').removeClass('active');
-                        $('.tpf-mo-new-folder-input').val('');
+                        // Reload to get updated folder list with counts
+                        window.location.reload();
                     } else {
                         self.showToast(response.data.message, 'error');
                     }
@@ -442,7 +480,7 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        self.refreshFolders();
+                        window.location.reload();
                     } else {
                         self.showToast(response.data.message, 'error');
                         self.cancelRename();
@@ -476,12 +514,13 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        self.refreshFolders();
 
                         // If we were viewing this folder, go to all media
                         if (self.currentFolder == folderId) {
-                            self.filterByFolder('all');
+                            self.currentFolder = 'all';
                         }
+
+                        window.location.reload();
                     } else {
                         self.showToast(response.data.message, 'error');
                     }
@@ -520,56 +559,6 @@
                     self.showToast(self.strings.errorOccurred, 'error');
                 }
             });
-        },
-
-        /**
-         * Refresh folder list
-         */
-        refreshFolders: function() {
-            var self = this;
-
-            $.ajax({
-                url: tpfMediaOrganizer.ajaxUrl,
-                type: 'POST',
-                data: {
-                    action: 'tpf_mo_get_folders',
-                    nonce: tpfMediaOrganizer.nonce
-                },
-                success: function(response) {
-                    if (response.success) {
-                        self.folders = response.data.folders;
-                        self.rebuildTree();
-                    }
-                }
-            });
-        },
-
-        /**
-         * Rebuild folder tree
-         */
-        rebuildTree: function() {
-            var self = this;
-            var $tree = $('.tpf-mo-folder-tree');
-
-            // Keep special items
-            var $allItem = $tree.find('.tpf-mo-folder-item[data-folder-id="all"]');
-            var $uncatItem = $tree.find('.tpf-mo-folder-item[data-folder-id="uncategorized"]');
-
-            $tree.empty();
-
-            // Re-add special items
-            $tree.append($allItem);
-            if (this.settings.showUncategorized) {
-                $tree.append($uncatItem);
-            }
-
-            // Add folders
-            this.folders.forEach(function(folder) {
-                $tree.append(self.createFolderItem(folder));
-            });
-
-            // Restore active state
-            this.setActiveFromUrl();
         },
 
         /**
