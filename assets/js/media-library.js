@@ -39,12 +39,12 @@
         hookMediaLibraryAjax: function() {
             var self = this;
 
-            // Hook into the AJAX request for query-attachments
-            $(document).ajaxSend(function(event, jqXHR, settings) {
-                if (settings.data && typeof settings.data === 'string' && settings.data.indexOf('action=query-attachments') !== -1) {
+            // Use ajaxPrefilter to modify request BEFORE it's sent
+            $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+                if (options.data && typeof options.data === 'string' && options.data.indexOf('action=query-attachments') !== -1) {
                     // Add our folder filter to the request
                     if (self.currentFolder && self.currentFolder !== 'all') {
-                        settings.data += '&tpf_media_folder=' + encodeURIComponent(self.currentFolder);
+                        options.data += '&tpf_media_folder=' + encodeURIComponent(self.currentFolder);
                     }
                 }
             });
