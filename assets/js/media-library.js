@@ -425,8 +425,10 @@
                 success: function(response) {
                     if (response.success) {
                         self.showToast(response.data.message, 'success');
-                        // Reload to get updated folder list with counts
-                        window.location.reload();
+                        // Navigate to All Media view
+                        var url = new URL(window.location.href);
+                        url.searchParams.delete('tpf_media_folder');
+                        window.location.href = url.toString();
                     } else {
                         self.showToast(response.data.message, 'error');
                     }
