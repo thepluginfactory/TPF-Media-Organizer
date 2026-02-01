@@ -44,7 +44,12 @@ class Taxonomy {
      * Constructor
      */
     private function __construct() {
-        add_action('init', array($this, 'register_taxonomy'), 5);
+        // If init already fired, register immediately, otherwise hook it
+        if (did_action('init')) {
+            $this->register_taxonomy();
+        } else {
+            add_action('init', array($this, 'register_taxonomy'), 5);
+        }
     }
 
     /**
