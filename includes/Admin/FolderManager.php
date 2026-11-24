@@ -249,6 +249,7 @@ class FolderManager {
         }
 
         $success_count = 0;
+        $attachment_ids = array_filter($attachment_ids, array(Taxonomy::class, 'can_file'));
         foreach ($attachment_ids as $attachment_id) {
             if (Taxonomy::assign_to_folder($attachment_id, $folder_id)) {
                 $success_count++;

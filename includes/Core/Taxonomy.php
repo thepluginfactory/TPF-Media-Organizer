@@ -267,10 +267,21 @@ class Taxonomy {
     }
 
     /**
-     * Assign attachment to folder
+     * May the current user file this item into (or out of) a folder?
      *
      * @param int $attachment_id Attachment post ID
-     * @param int $folder_id     Folder term ID (0 to remove from all folders)
+     * @return bool
+     */
+    public static function can_file($attachment_id) {
+        // CR339: only attachments, and only ones the current user may edit.
+        return get_post_type($attachment_id) === 'attachment' && current_user_can('edit_post', $attachment_id);
+    }
+
+    /**
+     * Assign an attachment to a folder (callers check can_file() first)
+     *
+     * @param int $attachment_id Attachment ID
+     * @param int $folder_id     Folder term ID (0 = no folder)
      * @return bool
      */
     public static function assign_to_folder($attachment_id, $folder_id) {

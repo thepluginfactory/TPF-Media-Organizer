@@ -107,6 +107,7 @@ class BulkActions {
         }
 
         $processed = 0;
+        $post_ids = array_filter(array_map('absint', (array) $post_ids), array(Taxonomy::class, 'can_file'));
 
         if ($action === 'tpf_mo_remove_folder') {
             // Remove from all folders
@@ -205,6 +206,7 @@ class BulkActions {
         }
 
         $processed = 0;
+        $attachment_ids = array_filter($attachment_ids, array(Taxonomy::class, 'can_file'));
 
         foreach ($attachment_ids as $attachment_id) {
             if ($action_type === 'add') {
