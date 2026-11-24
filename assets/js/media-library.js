@@ -665,12 +665,12 @@
         },
 
         /**
-         * Escape HTML
+         * Escape HTML, quotes included, so the result is safe inside an attribute value too (CR338)
          */
         escapeHtml: function(text) {
             var div = document.createElement('div');
             div.textContent = text;
-            return div.innerHTML;
+            return div.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
     };
 
