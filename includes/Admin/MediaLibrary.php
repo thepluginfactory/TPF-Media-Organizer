@@ -115,7 +115,10 @@ class MediaLibrary {
                 'dropHere'       => __('Drop items here', 'tpf-media-organizer'),
                 'errorOccurred'  => __('An error occurred. Please try again.', 'tpf-media-organizer'),
             ),
-            'uncategorizedCount' => Taxonomy::get_folder_count(0),
+            // CR340: the sidebar (and its Uncategorized count) only renders on upload.php.
+            'uncategorizedCount' => ('upload.php' === $hook && DefaultSettings::get_setting('tpf_mo_show_uncategorized'))
+                ? Taxonomy::get_folder_count(0)
+                : 0,
         ));
     }
 
@@ -273,7 +276,7 @@ class MediaLibrary {
 
         wp_send_json_success(array(
             'folders'            => Taxonomy::get_folder_tree(),
-            'uncategorizedCount' => Taxonomy::get_folder_count(0),
+            'uncategorizedCount' => DefaultSettings::get_setting('tpf_mo_show_uncategorized') ? Taxonomy::get_folder_count(0) : 0,
         ));
     }
 

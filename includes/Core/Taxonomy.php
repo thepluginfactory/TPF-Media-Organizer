@@ -267,6 +267,34 @@ class Taxonomy {
     }
 
     /**
+     * Count uncategorized attachments (not in any folder) with one SQL COUNT
+     *
+     * @return int
+     */
+    public static function count_uncategorized_attachments() {
+        global $wpdb;
+
+        // CR340: count in SQL instead of loading every attachment ID into PHP.
+        $count = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*)
+                FROM {$wpdb->posts} p
+                LEFT JOIN {$wpdb->term_relationships} tr
+                    ON tr.object_id = p.ID
+                    AND tr.term_taxonomy_id IN (
+                        SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt WHERE tt.taxonomy = %s
+                    )
+                WHERE p.post_type = 'attachment'
+                AND p.post_status = 'inherit'
+                AND tr.object_id IS NULL",
+                self::TAXONOMY
+            )
+        );
+
+        return (int) $count;
+    }
+
+    /**
      * May the current user file this item into (or out of) a folder?
      *
      * @param int $attachment_id Attachment post ID
@@ -322,7 +350,7 @@ class Taxonomy {
      */
     public static function get_folder_count($folder_id) {
         if ($folder_id === 0) {
-            return count(self::get_uncategorized_attachments());
+            return self::count_uncategorized_attachments();
         }
 
         $term = get_term($folder_id, self::TAXONOMY);
