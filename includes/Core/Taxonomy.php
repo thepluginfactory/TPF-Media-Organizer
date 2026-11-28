@@ -81,7 +81,9 @@ class Taxonomy {
             'show_admin_column' => true,
             'show_in_nav_menus' => false,
             'show_tagcloud'     => false,
-            'show_in_rest'      => true,
+            // CR341: off. Core's terms endpoint ignores public=false and would list every folder
+            // to logged-out visitors; the plugin's UI only uses admin-ajax.
+            'show_in_rest'      => false,
             'query_var'         => false,
             'rewrite'           => false,
             'capabilities'      => array(
